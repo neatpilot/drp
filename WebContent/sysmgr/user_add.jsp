@@ -1,7 +1,6 @@
-<%@	page import="org.cn.pilot.sysmgr.manager.UserManager"%>
-<%@	page import="org.cn.pilot.sysmgr.domain.User"%>
-<%@ page language="java" contentType="text/html; charset=GB18030"
-	pageEncoding="GB18030"%>
+<%@	page import="org.cn.pilot.drp.sysmgr.manager.UserManager"%>
+<%@	page import="org.cn.pilot.drp.sysmgr.domain.User"%>
+<%@ page language="java" contentType="text/html; charset=GB18030" pageEncoding="GB18030"%>
 <%
 	request.setCharacterEncoding("GB18030");
 
@@ -11,8 +10,7 @@
 	String email = "";
 	// differentiate a request is by clicking add buttion or not
 	if ("add".equals(request.getParameter("command"))) {
-		if (UserManager.getInstance().findUserById(
-				request.getParameter("userId")) == null) {
+		if (UserManager.getInstance().findUserById(request.getParameter("userId")) == null) {
 			User user = new User();
 			user.setUserId(request.getParameter("userId"));
 			user.setUserName(request.getParameter("userName"));
@@ -27,8 +25,7 @@
 			userName = request.getParameter("userName");
 			contactTel = request.getParameter("contactTel");
 			email = request.getParameter("email");
-			out.println("用户代码已经存在，代码=【"
-					+ request.getParameter("userId") + "】");
+			out.println("用户代码已经存在，代码=【"+ request.getParameter("userId") + "】");
 		}
 
 	}
@@ -43,7 +40,7 @@
 <script src="../script/client_validate.js"></script>
 <script type="text/javascript">
 	function goBack() {
-		window.self.location = "user_maint.html"
+		window.self.location = "user_maint.jsp";
 	}
 
 	/* 		
@@ -128,14 +125,54 @@
 	function init() {
 		document.getElementById("userId").focus();
 	}
-</script>
 
+	// ajax find userID is used or not
+	function validate(field) {
+		if (trim(field.value).length > 0) {
+			var xmlHttp = null;
+
+			if (window.XMLHttpRequest) {
+				// ff,chrome
+				xmlHttp = new XMLHttpRequest();
+			} else if (window.ActiveXObject) {
+				// ie
+				xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			// guarantee every url is different(ajax has problems with cache request)
+			var url = "user_validate.jsp?userId=" + trim(field.value) + "&time=" + new Date().getTime();
+			xmlHttp.open("GET",url,true);
+			
+			//callback
+			xmlHttp.onreadystatechange = function(){
+				if(xmlHttp.readyState==4){
+					if(xmlHttp.status == 200){
+						// first remove \r\n
+						if(trim(xmlHttp.responseText.replace(/\r\n/g, ""))!=""){
+							// user ID exists!
+							document.getElementById("spanUserId").innerHTML="<font color='red'>"+xmlHttp.responseText+"</font>";
+						}else{
+							// user ID not exist!
+							document.getElementById("spanUserId").innerHTML = "";
+						}
+					}else{
+						alert("request error, error status = "+xmlHttp.status);
+					}
+				}
+			};
+			
+			xmlHttp.send(null);
+		}else{
+			// not valid input, not need to check from database
+			document.getElementById("spanUserId").innerHTML = "";
+		}
+	}
+</script>
 </head>
 
 <body class="body1" onload="init()">
 
 	<form name="userForm" target="_self" id="userForm">
-		<!- flag for normal or add action ->
+		<!--flag for normal or add action  -->
 		<input type="hidden" name="command" value="add">
 		<div align="center">
 			<table width="95%" border="0" cellspacing="2" cellpadding="2">
@@ -143,11 +180,9 @@
 					<td>&nbsp;</td>
 				</tr>
 			</table>
-			<table width="95%" border="0" cellspacing="0" cellpadding="0"
-				height="25">
+			<table width="95%" border="0" cellspacing="0" cellpadding="0" height="25">
 				<tr>
-					<td width="522" class="p1" height="25" nowrap><img
-						src="../images/mark_arrow_03.gif" width="14" height="14">
+					<td width="522" class="p1" height="25" nowrap><img src="../images/mark_arrow_03.gif" width="14" height="14">
 						&nbsp; <b>系统管理&gt;&gt;用户维护&gt;&gt;添加</b></td>
 				</tr>
 			</table>
@@ -159,8 +194,10 @@
 							<font color="#FF0000">*</font>用户代码:&nbsp;
 						</div>
 					</td>
-					<td width="78%"><input name="userId" type="text" class="text1"
-						id="userId" size="10" maxlength="10" value="<%=userId %>"></td>
+					<td width="78%"><input name="userId" type="text" class="text1" id="userId" size="10" maxlength="10"
+						value="<%=userId%>" onBlur="validate(this)">
+						<span id="spanUserId"></span>
+					</td>
 				</tr>
 				<tr>
 					<td height="26">
@@ -168,8 +205,8 @@
 							<font color="#FF0000">*</font>用户名称:&nbsp;
 						</div>
 					</td>
-					<td><input name="userName" type="text" class="text1"
-						id="userName" size="20" maxlength="20" value="<%=userName %>"></td>
+					<td><input name="userName" type="text" class="text1" id="userName" size="20" maxlength="20"
+						value="<%=userName%>"></td>
 				</tr>
 				<tr>
 					<td height="26">
@@ -177,31 +214,29 @@
 							<font color="#FF0000">*</font>密码:&nbsp;
 						</div>
 					</td>
-					<td><label> <input name="password" type="password"
-							class="text1" id="password" size="20" maxlength="20">
+					<td><label> <input name="password" type="password" class="text1" id="password" size="20"
+							maxlength="20">
 					</label></td>
 				</tr>
 				<tr>
 					<td height="26">
 						<div align="right">联系电话:&nbsp;</div>
 					</td>
-					<td><input name="contactTel" type="text" class="text1"
-						id="contactTel" size="20" maxlength="20" value="<%=contactTel %>"></td>
+					<td><input name="contactTel" type="text" class="text1" id="contactTel" size="20" maxlength="20"
+						value="<%=contactTel%>"></td>
 				</tr>
 				<tr>
 					<td height="26">
 						<div align="right">email:&nbsp;</div>
 					</td>
-					<td><input name="email" type="text" class="text1" id="email"
-						size="20" maxlength="20" value="<%=email %>"></td>
+					<td><input name="email" type="text" class="text1" id="email" size="20" maxlength="20" value="<%=email%>"></td>
 				</tr>
 			</table>
 			<hr width="97%" align="center" size=0>
 			<div align="center">
-				<input name="btnAdd" class="button1" type="button" id="btnAdd"
-					value="添加" onClick="addUser()"> &nbsp;&nbsp;&nbsp;&nbsp; <input
-					name="btnBack" class="button1" type="button" id="btnBack"
-					value="返回" onClick="goBack()" />
+				<input name="btnAdd" class="button1" type="button" id="btnAdd" value="添加" onClick="addUser()">
+				&nbsp;&nbsp;&nbsp;&nbsp; <input name="btnBack" class="button1" type="button" id="btnBack" value="返回"
+					onClick="goBack()" />
 			</div>
 		</div>
 	</form>
