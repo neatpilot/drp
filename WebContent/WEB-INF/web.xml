@@ -6,17 +6,58 @@
 		<filter-class>org.cn.pilot.drp.util.filter.CharsetEncodingFilter</filter-class>
 		<init-param>
 			<param-name>encoding</param-name>
-			<param-value>GBK</param-value>
+			<param-value>GB18030</param-value>
 		</init-param>
 	</filter>
+
+	<filter-mapping>
+		<filter-name>CharsetEncodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>CharsetEncodingFilter</filter-name>
 		<url-pattern>*.jsp</url-pattern>
 	</filter-mapping>
 
+
+	<filter-mapping>
+		<filter-name>CharsetEncodingFilter</filter-name>
+		<url-pattern>/servlet/*</url-pattern>
+	</filter-mapping>
+
 	<session-config>
 		<session-timeout>60</session-timeout>
 	</session-config>
 
+	<servlet>
+		<servlet-name>ClientIdValidateServlet</servlet-name>
+		<servlet-class>org.cn.pilot.drp.util.servlet.ClientIdValidateServlet</servlet-class>
+		<load-on-startup>10</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>ClientIdValidateServlet</servlet-name>
+		<url-pattern>/servlet/ClientIdValidateServlet</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>ShowAddItemServlet</servlet-name>
+		<servlet-class>org.cn.pilot.drp.basedata.web.ShowAddItemServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>ShowAddItemServlet</servlet-name>
+		<url-pattern>/servlet/item/ShowAddItemServlet</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>AddItemServlet</servlet-name>
+		<servlet-class>org.cn.pilot.drp.basedata.web.AddItemServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>AddItemServlet</servlet-name>
+		<url-pattern>/servlet/item/AddItemServlet</url-pattern>
+	</servlet-mapping>
 </web-app>

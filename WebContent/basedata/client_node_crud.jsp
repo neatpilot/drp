@@ -1,9 +1,21 @@
+<%@page import="org.cn.pilot.drp.util.Constants"%>
 <%@page import="org.cn.pilot.drp.basedata.manager.ClientManager"%>
 <%@page import="org.cn.pilot.drp.basedata.domain.Client"%>
 <%@ page language="java" contentType="text/html; charset=GB18030" pageEncoding="GB18030"%>
 <%
 	int id = Integer.parseInt(request.getParameter("id"));
-	Client region = ClientManager.getInstance().findClientOrRegionById(id);
+	Client region = ClientManager.getInstance().findClientOrRegionById(
+			id);
+
+	if (Constants.DELETE.equals(request.getParameter("command"))) {
+		ClientManager.getInstance().deleteclientOrRegion(id);
+%>
+<script type="text/javascript">
+			alert("删除成功");
+			window.parent.clientTreeFrame.location.reload();
+</script>
+<%
+	}
 %>
 <html>
 <head>
@@ -12,25 +24,32 @@
 <title>分销商维护</title>
 <script type="text/javascript">
 	function addRegion() {
-		window.self.location = "client_node_add.html";
+		window.self.location = "client_node_add.jsp?pid=<%=id%>";
 	}
 
 	function modifyRegion() {
-		window.self.location = "client_node_modify.html";
+		window.self.location = "client_node_modify.jsp?id=<%=id%>";
 	}
 
 	function deleteRegion() {
-
+		if(window.confirm("delete it?")){
+			document.getElementById("clientForm").method = "POST";
+			document.getElementById("clientForm").action = "client_node_crud.jsp";
+			document.getElementById("clientForm").submit();
+		}
 	}
 
 	function addClient() {
-		window.self.location = "client_add.html";
+		window.self.location = "client_add.jsp?pid=<%=id%>";
+
 	}
 </script>
 </head>
 
 <body class="body1">
 	<form id="clientForm" name="clientForm" method="post" action="">
+		<input name="command" type="hidden" value="<%=Constants.DELETE%>"> 
+		<input name="id" type="hidden" value="<%=id%>">
 		<table width="95%" border="0" cellspacing="0" cellpadding="0" height="8">
 			<tr>
 				<td width="522" class="p1" height="2" nowrap="nowrap"><img src="../images/mark_arrow_02.gif" width="14" height="14" /> &nbsp; <b>基础数据管理&gt;&gt;分销商维护</b>
@@ -45,7 +64,7 @@
 				<td width="213">
 					<div align="right">当前区域名称：</div>
 				</td>
-				<td width="410"><label> <input name="name" type="text" class="text1" id="name" " readonly="true" value="<%=region.getName() %>"/>
+				<td width="410"><label> <input name="name" type="text" class="text1" id="name" " readonly="true" value="<%=region.getName()%>" />
 				</label></td>
 			</tr>
 		</table>

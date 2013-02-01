@@ -16,12 +16,15 @@ public class CharsetEncodingFilter implements Filter {
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		this.encoding = filterConfig.getInitParameter("encoding");
+		System.out.println("±àÂë³õÊ¼ÉèÖÃ--->" + encoding);
 	}
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+			ServletException {
 
 		request.setCharacterEncoding(encoding);
+		response.setCharacterEncoding(encoding);
 
 		chain.doFilter(request, response);
 
@@ -29,7 +32,7 @@ public class CharsetEncodingFilter implements Filter {
 
 	@Override
 	public void destroy() {
-
+		encoding = null;
 	}
 
 }

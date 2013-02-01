@@ -1,6 +1,6 @@
 package org.cn.pilot.drp.basedata.domain;
 
-import org.cn.pilot.drp.util.domain.ClientLevel;
+import org.cn.pilot.drp.util.datadict.domain.ClientLevel;
 
 /**
  * 
@@ -30,7 +30,7 @@ public class Client {
 
 	private String isClient;
 
-	private ClientLevel clientLevel;
+	private ClientLevel clientLevel= new ClientLevel();
 
 	public int getId() {
 		return id;

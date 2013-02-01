@@ -19,7 +19,7 @@ public class DbUtil {
 		Connection conn = null;
 
 		try {
-			JdbcConfig jdbcConfig = DbaXmlReader.getInstance().getJdbcConfig();
+			JdbcConfig jdbcConfig = XmlConfigReader.getInstance().getJdbcConfig();
 			Class.forName(jdbcConfig.getDriverName());
 			conn = DriverManager.getConnection(jdbcConfig.getUrl(), jdbcConfig.getUser(), jdbcConfig.getPassword());
 		} catch (SQLException | ClassNotFoundException e) {
@@ -66,5 +66,80 @@ public class DbUtil {
 
 	public static void main(String[] args) {
 		getConnection();
+	}
+
+	/**
+	 * 手动设置事务起始<br>
+	 * manually set a transaction
+	 * 
+	 * @param conn
+	 */
+	public static void beginTransaction(Connection conn) {
+		if (null != conn) {
+			try {
+				if (conn.getAutoCommit()) {
+					conn.setAutoCommit(false);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * 手动提交事务<br>
+	 * manually commit a transaction
+	 * 
+	 * @param conn
+	 */
+	public static void commitTransaction(Connection conn) {
+		if (null != conn) {
+			try {
+				//如果本身就是auto提交方式，就不用再一次commit了
+				if (!conn.getAutoCommit()) {
+					conn.commit();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * 手动回滚事务<br>
+	 * manually rollback
+	 * 
+	 * @param conn
+	 */
+	public static void rollbackTransaction(Connection conn) {
+		if (null != conn) {
+			try {
+				if(!conn.getAutoCommit()){
+					conn.rollback();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * 手动重置提交模式<br>
+	 * manually reset to a default connection
+	 * 
+	 * @param conn
+	 */
+	public static void resetConnection(Connection conn) {
+		if (null != conn) {
+			try {
+				if (!conn.getAutoCommit()) {
+					conn.setAutoCommit(true);
+				}else{
+					conn.setAutoCommit(false);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
