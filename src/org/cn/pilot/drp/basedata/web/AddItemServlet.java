@@ -1,7 +1,6 @@
 package org.cn.pilot.drp.basedata.web;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -52,15 +51,13 @@ public class AddItemServlet extends HttpServlet {
 
 		// Ìí¼Ó
 		ItemManager itemManager = new ItemManagerImpl();
-		String errorMessage = "";
 		try {
 			itemManager.addItem(item);
 		} catch (ApplicationException e) {
-			errorMessage = e.getMessage();
+			throw e;
 		}
 
-		resp.sendRedirect(req.getContextPath() + "/basedata/item_maint.jsp?errorMessage="
-				+ URLEncoder.encode(errorMessage, "GB18030"));
+		resp.sendRedirect(req.getContextPath() + "/servlet/item/SearchItemServlet");
 	}
 
 }

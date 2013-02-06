@@ -24,7 +24,7 @@ public class CharsetEncodingFilter implements Filter {
 			ServletException {
 
 		request.setCharacterEncoding(encoding);
-		response.setCharacterEncoding(encoding);
+		//response.setCharacterEncoding(encoding);
 
 		chain.doFilter(request, response);
 
@@ -32,7 +32,7 @@ public class CharsetEncodingFilter implements Filter {
 
 	@Override
 	public void destroy() {
-		encoding = null;
+		//encoding = null;
 	}
 
 }

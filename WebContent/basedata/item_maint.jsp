@@ -1,10 +1,16 @@
+<%@page import="java.util.Iterator"%>
+<%@page import="java.util.List"%>
+<%@page import="org.cn.pilot.drp.basedata.domain.Item"%>
+<%@page import="org.cn.pilot.drp.util.PageModel"%>
 <%@ page language="java" contentType="text/html; charset=GB18030" pageEncoding="GB18030"%>
 
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://"
-			+ request.getServerName() + ":" + request.getServerPort()
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
+	String condition = request.getParameter("condition")==null?"":request.getParameter("condition");
+	
+	PageModel<Item> itemPageModel = (PageModel<Item>) request.getAttribute("itemPageModel");
 %>
 <html>
 <head>
@@ -19,27 +25,64 @@
 	}
 
 	function modifyItem() {
-		window.self.location = "item_modify.html";
+		var selectFlagList = document.getElementsByName("selectFlag");
+		document.get
+		var count = 0;
+		var index = 0;
+		for(var i = 0 ; i<selectFlagList.length;i++){
+			if(selectFlagList[i].checked){
+				count ++;
+				index = i;
+			}
+		}
+		
+		if (count == 0) {
+			alert("PLEASE CHOOSE ONE ITEM！");
+			return;
+		}
+		if (count > 1) {
+			alert("ONLY ONE ITEM ALLOWED！");
+			return;
+		}
+		
+		window.self.location="<%=basePath%>servlet/item/ShowModifyItemServlet?itemNo="+selectFlagList[index].value;
 	}
 
 	function deleteItem() {
-
+		var selectFlagList = document.getElementsByName("selectFlag");
+		var count = 0;
+		for(var i = 0 ; i<selectFlagList.length;i++){
+			if(selectFlagList[i].checked){
+				count ++;
+			}
+		}
+		
+		if (count == 0) {
+			alert("PLEASE AT LEAST CHOOSE ONE ITEM！");
+			return;
+		}
+		
+		if(window.confirm("确认删除选定？")){
+			document.getElementById("itemForm").action="<%=basePath%>servlet/item/DeleteItemServlet";
+			document.getElementById("itemForm").method = "post";
+			document.getElementById("itemForm").submit();
+		}
 	}
 
 	function topPage() {
-
+		window.self.location = "<%=basePath%>servlet/item/SearchItemServlet?pageNo=<%=itemPageModel.getTopPageNo()%>&condition=<%=condition%>";
 	}
 
 	function previousPage() {
-
+		window.self.location = "<%=basePath%>servlet/item/SearchItemServlet?pageNo=<%=itemPageModel.getPreviousPageNo()%>&condition=<%=condition%>";
 	}
 
 	function nextPage() {
-
+		window.self.location = "<%=basePath%>servlet/item/SearchItemServlet?pageNo=<%=itemPageModel.getNextPageNo()%>&condition=<%=condition%>";
 	}
 
 	function bottomPage() {
-
+		window.self.location = "<%=basePath%>servlet/item/SearchItemServlet?pageNo=<%=itemPageModel.getBottomPageNo()%>&condition=<%=condition%>";
 	}
 
 	function checkAll() {
@@ -47,13 +90,19 @@
 	}
 
 	function uploadPic4Item() {
-		window.self.location = "item_upload.html"
+		window.self.location = "item_upload.html";
+	}
+	
+	function searchItemByCondition(){
+		document.getElementById("itemForm").action="<%=basePath%>servlet/item/SearchItemServlet";
+		document.getElementById("itemForm").method = "post";
+		document.getElementById("itemForm").submit();
 	}
 </script>
 </head>
 
 <body class="body1">
-	<form name="itemForm">
+	<form name="itemForm" id="itemForm">
 		<div align="center">
 			<table width="95%" border="0" cellspacing="2" cellpadding="2">
 				<tr>
@@ -72,10 +121,10 @@
 					<td width="17%" height="29">
 						<div align="left">物料代码/名称:</div>
 					</td>
-					<td width="57%"><input name="clientIdOrName" type="text" class="text1" id="clientId4" size="50" maxlength="50"></td>
+					<td width="57%"><input name="condition" type="text" class="text1" id="condition" size="50" maxlength="50" value="<%= condition %>"></td>
 					<td width="26%">
 						<div align="left">
-							<input name="btnQuery" type="button" class="button1" id="btnQuery" value="查询">
+							<input name="btnQuery" type="button" class="button1" id="btnQuery" value="查询" onclick="searchItemByCondition()">
 						</div>
 					</td>
 				</tr>
@@ -94,7 +143,8 @@
 		<table width="95%" border="0" cellspacing="0" cellpadding="0" class="rd1" align="center">
 			<tr>
 				<td nowrap height="10" class="p2">物料信息</td>
-				<td nowrap height="10" class="p3">&nbsp;<font color="red"><%=request.getParameter("errorMessage") == null ? "" : new String(request.getParameter("errorMessage").getBytes("ISO-8859-1"), "GB18030") %></font></td>
+				<td nowrap height="10" class="p3">&nbsp;<font color="red"><%=request.getParameter("errorMessage") == null ? "" : new String(request.getParameter(
+					"errorMessage").getBytes("ISO-8859-1"), "GB18030")%></font></td>
 			</tr>
 		</table>
 		<table width="95%" border="1" cellspacing="0" cellpadding="0" align="center" class="table1">
@@ -107,112 +157,31 @@
 				<td width="138" class="rd6">类别</td>
 				<td width="101" class="rd6">计量单位</td>
 			</tr>
+			
+				<%
+					List<Item> itemsList = itemPageModel.getList();
+					for(Iterator<Item> iter = itemsList.iterator();iter.hasNext();){
+						Item item = iter.next();
+				%>
 			<tr>
+				<td class="rd8"><input type="checkbox" name="selectFlag" class="checkbox1" value="<%= item.getItemNo() %>"></td>
+				<td class="rd8"><a href="#" onClick="window.open('item_detail.html', '物料详细信息', 'width=400, height=400, scrollbars=no')"><%= item.getItemNo() %></a></td>
+				<td class="rd8"><%= item.getItemName() %></td>
+				<td class="rd8"><%= item.getSpec() %></td>
+				<td class="rd8"><%= item.getPattern() %></td>
+				<td class="rd8"><%= item.getItemCategory().getName() %></td>
+				<td class="rd8"><%= item.getItemUnit().getName() %></td>
+			</tr>
+				<%
+					}
+				%>
 
-				<td class="rd8"><input type="checkbox" name="selectFlag" class="checkbox1"></td>
-				<td class="rd8"><a href="#" onClick="window.open('item_detail.html', '物料详细信息', 'width=400, height=400, scrollbars=no')">2001</a></td>
-				<td class="rd8">青霉素</td>
-				<td class="rd8">xxxxx</td>
-				<td class="rd8">xxxxx</td>
-				<td class="rd8">西药</td>
-				<td class="rd8">盒</td>
-			</tr>
-			<tr>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-			</tr>
-			<tr>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-			</tr>
-			<tr>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-			</tr>
-			<tr>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-			</tr>
-			<tr>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-			</tr>
-			<tr>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-			</tr>
-			<tr>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-			</tr>
-			<tr>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-			</tr>
-			<tr>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-			</tr>
-			<tr>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-				<td class="rd8">&nbsp;</td>
-			</tr>
 		</table>
 		<table width="95%" height="30" border="0" align="center" cellpadding="0" cellspacing="0" class="rd1">
 			<tr>
 				<td nowrap class="rd19" height="2" width="36%">
 					<div align="left">
-						<font color="#FFFFFF">&nbsp;共&nbspxx&nbsp页</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#FFFFFF">当前第</font>&nbsp <font color="#FF0000">x</font>&nbsp
+						<font color="#FFFFFF">&nbsp;共<%=itemPageModel.getTotalPages() %>页</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font color="#FFFFFF">当前第</font>&nbsp <font color="#FF0000"><%=itemPageModel.getPageNo() %></font>&nbsp
 						<font color="#FFFFFF">页</font>
 					</div>
 				</td>

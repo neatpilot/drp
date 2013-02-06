@@ -54,5 +54,5 @@ public interface ItemDAO {
 	 * @param condation
 	 * @return
 	 */
-	public PageModel findItemList(Connection conn, int pageNo, int pageSize, String condation);
+	public PageModel<Item> findItemList(Connection conn, int pageNo, int pageSize, String condition);
 }

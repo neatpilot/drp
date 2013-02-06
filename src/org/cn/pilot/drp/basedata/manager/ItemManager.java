@@ -45,12 +45,12 @@ public interface ItemManager {
 	public Item findItemById(String itemNo);
 
 	/**
-	 * 根据条件分页查询
+	 * 根据条件分页查询<br>
 	 * 
 	 * @param pageNo
 	 * @param pageSize
-	 * @param condation
+	 * @param condition -- 为空则无条件查询;null if no condition asked
 	 * @return
 	 */
-	public PageModel findItemList(int pageNo, int pageSize, String condation);
+	public PageModel<Item> findItemList(int pageNo, int pageSize, String condition);
 }

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 配置factory信息; factory configurations -->
+<beans>
+	<service-class>
+		<service id="org.cn.pilot.drp.basedata.manager.ItemManager" class="org.cn.pilot.drp.basedata.manager.ItemManagerImpl" />
+	</service-class>
+	<dao-class>
+		<dao id="org.cn.pilot.drp.basedata.dao.dao.ItemDAO" class="org.cn.pilot.drp.basedata.dao.impl.ItemDAO4OracleImpl" />
+	</dao-class>
+</beans>

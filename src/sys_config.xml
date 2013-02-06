@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<db-info>
+		<driver-name>oracle.jdbc.driver.OracleDriver</driver-name>
+		<url>jdbc:oracle:thin:@localhost:1521:orcl</url>
+		<user>batman</user>
+		<password>catwoman</password>
+	</db-info>
+
+	<dao-factory>
+		<item-dao-factory>org.cn.pilot.drp.basedata.dao.factory.ItemDAOFactory4Oracle</item-dao-factory>
+		<user-dao-factory></user-dao-factory>
+	</dao-factory>
+</config>

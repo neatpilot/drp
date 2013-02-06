@@ -5,22 +5,25 @@ import org.cn.pilot.drp.util.datadict.domain.ItemUnit;
 
 /**
  * 物料实体类;item entity class
+ * 
  * @author Administrator
- *
+ * 
  */
 public class Item {
 
 	private String itemNo;
-	
+
 	private String itemName;
-	
+
 	private String spec;
-	
+
 	private String pattern;
-	
+
 	private ItemCategory itemCategory;
-	
+
 	private ItemUnit itemUnit;
+
+	private String fileName;
 
 	public String getItemName() {
 		return itemName;
@@ -69,4 +72,13 @@ public class Item {
 	public void setItemUnit(ItemUnit itemUnit) {
 		this.itemUnit = itemUnit;
 	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
 }
