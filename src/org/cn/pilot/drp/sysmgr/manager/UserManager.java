@@ -256,6 +256,27 @@ public class UserManager {
 
 		return user;
 	}
+	
+	public void modifyUserPassword(String userId, String password){
+		String sql = "update t_user set password=? where user_id=?";
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = DbUtil.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, password);
+			pstmt.setString(2, userId);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally{
+			DbUtil.close(pstmt);
+			DbUtil.close(conn);
+		}
+		
+	}
 
 	public static void main(String[] args) {
 		// User user = new User();

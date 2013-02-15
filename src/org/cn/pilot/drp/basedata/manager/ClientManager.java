@@ -4,11 +4,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.cn.pilot.drp.basedata.domain.AimClient;
 import org.cn.pilot.drp.basedata.domain.Client;
 import org.cn.pilot.drp.util.Constants;
 import org.cn.pilot.drp.util.DbUtil;
 import org.cn.pilot.drp.util.IdGenerator;
+import org.cn.pilot.drp.util.PageModel;
 import org.cn.pilot.drp.util.datadict.domain.ClientLevel;
 
 /**
@@ -149,16 +153,16 @@ public class ClientManager {
 		try {
 			conn = DbUtil.getConnection();
 			DbUtil.beginTransaction(conn);
-			//store node(recursionDelNode will delete this node)
+			// store node(recursionDelNode will delete this node)
 			Client client = findClientOrRegionById(id);
-			//recursively delete nodes
+			// recursively delete nodes
 			recursionDelNode(conn, id);
-			
-			//原先父节点肯定不是叶子，现在检查他的孩子
-			if(getChildrenNum(conn, client.getPid())==0){
+
+			// 原先父节点肯定不是叶子，现在检查他的孩子
+			if (getChildrenNum(conn, client.getPid()) == 0) {
 				modifyIsLeafField(conn, client.getPid(), Constants.YES_FLAG);
 			}
-			
+
 			DbUtil.commitTransaction(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -335,4 +339,203 @@ public class ClientManager {
 
 	}
 
+	/**
+	 * 查询所有的供方分销商
+	 * 
+	 * 操作t_client表
+	 * 
+	 * @param pageNo
+	 *            第几页
+	 * @param pageSize
+	 *            每页多少条
+	 * @param queryStr
+	 *            查询条件
+	 * @return pageMode对象
+	 */
+	@SuppressWarnings("unchecked")
+	public PageModel findAllClient(int pageNo, int pageSize, String queryStr) {
+		StringBuffer sbSql = new StringBuffer();
+		// sbSql.append("select a.id, a.pid, a.name, a.client_id, b.id as client_level_id, b.name as client_level_name, ")
+		// .append("a.bank_acct_no, a.contact_tel, a.address, a.zip_code, a.is_leaf, a.is_client ")
+		// .append("from t_client a, t_data_dict b where a.client_level=b.id and a.is_client='Y' ")
+		// .append("and (a.client_id like '" + queryStr + "%' or ")
+		// .append("a.name like '" + queryStr + "%')  order by a.id ")
+		// .append("limit ").append((pageNo - 1) * pageSize).append(", ")
+		// .append(pageSize);
+		sbSql.append("select * from ")
+				.append("(")
+				.append("select t.*, rownum rn from ")
+				.append("(")
+				.append("select a.id, a.pid, a.name, a.client_id, b.id as client_level_id, b.name as client_level_name, ")
+				.append("a.bank_acct_no, a.contact_tel, a.address, a.zip_code, a.is_leaf, a.is_client ")
+				.append("from t_client a, t_data_dict b where a.client_level_id=b.id and a.is_client='Y' ")
+				.append("and (a.client_id like ? or ").append("a.name like ?) order by a.id ")
+				.append(") t where rownum<=?").append(") ").append("where rn > ?");
+		System.out.println("sql=" + sbSql.toString());
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		PageModel pageModel = null;
+		try {
+			conn = DbUtil.getConnection();
+			pstmt = conn.prepareStatement(sbSql.toString());
+			pstmt.setString(1, queryStr + "%");
+			pstmt.setString(2, queryStr + "%");
+			pstmt.setInt(3, pageNo * pageSize);
+			pstmt.setInt(4, (pageNo - 1) * pageSize);
+			rs = pstmt.executeQuery();
+			List clientList = new ArrayList();
+			while (rs.next()) {
+				Client client = new Client();
+				client.setId(rs.getInt(1));
+				client.setPid(rs.getInt(2));
+				client.setName(rs.getString(3));
+				client.setClientId(rs.getString(4));
+				ClientLevel cl = new ClientLevel();
+				cl.setId(rs.getString(5));
+				cl.setName(rs.getString(6));
+				client.setClientLevel(cl);
+				client.setBankAcctNo(rs.getString(7));
+				client.setContactTel(rs.getString(8));
+				client.setAddress(rs.getString(9));
+				client.setZipCode(rs.getString(10));
+				client.setIsLeaf(rs.getString(11));
+				client.setIsClient(rs.getString(12));
+				clientList.add(client);
+			}
+			pageModel = new PageModel();
+			pageModel.setPageNo(pageNo);
+			pageModel.setPageSize(pageSize);
+			pageModel.setList(clientList);
+			pageModel.setTotalRecords(getTotalClientRecords(conn, queryStr));
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DbUtil.close(rs);
+			DbUtil.close(pstmt);
+			DbUtil.close(conn);
+		}
+		return pageModel;
+	}
+
+	/**
+	 * 根据条件取得供方分销商的记录数
+	 * 
+	 * @param conn
+	 * @param queryStr
+	 *            条件
+	 * @return 记录数
+	 */
+	private int getTotalClientRecords(Connection conn, String queryStr) {
+		String sql = "select count(*) from t_client where is_client='Y' and " + "(client_id like '" + queryStr
+				+ "%' or name like '" + queryStr + "%')";
+		int totalRecords = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				totalRecords = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DbUtil.close(rs);
+			DbUtil.close(pstmt);
+		}
+		return totalRecords;
+	}
+
+	/**
+	 * 查询所有的需方客户
+	 * 
+	 * 操作v_aim_client视图
+	 * 
+	 * @param pageNo
+	 *            第几页
+	 * @param pageSize
+	 *            每页多少条
+	 * @param queryStr
+	 *            查询条件
+	 * @return pageMode对象
+	 */
+	public PageModel findAllAimClient(int pageNo, int pageSize, String queryStr) {
+		// String sql = "select id, name, level_id, level_name from v_aim_client "
+		// + "where (id like '" + queryStr + "%' or name like '"
+		// + queryStr + "%') " + " order by id " + "limit " + (pageNo - 1)
+		// * pageSize + ", " + pageSize;
+		StringBuffer sbSql = new StringBuffer();
+		sbSql.append("select * from ")
+				.append("(")
+				.append("select t.*,rownum rn from ")
+				.append("(")
+				.append("select id, client_temi_id, name, client_temi_level_id, client_temi_level_name from v_aim_client ")
+				.append("where (client_temi_id like '" + queryStr + "%' or name like '" + queryStr + "%') ")
+				.append(" order by id").append(") t where rownum <=?").append(") ").append("where rn >= ?");
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		PageModel pageModel = null;
+		try {
+			conn = DbUtil.getConnection();
+			pstmt = conn.prepareStatement(sbSql.toString());
+			pstmt.setInt(1, pageNo * pageSize);
+			pstmt.setInt(2, (pageNo - 1) * pageSize);
+			rs = pstmt.executeQuery();
+			List aimClientList = new ArrayList();
+			while (rs.next()) {
+				AimClient aimClient = new AimClient();
+				aimClient.setId(rs.getInt("id"));
+				aimClient.setClientTemiId(rs.getString("client_temi_id"));
+				aimClient.setName(rs.getString("name"));
+				aimClient.setClientTemilevelId(rs.getString("client_temi_level_id"));
+				aimClient.setClientTemilevelName(rs.getString("client_temi_level_name"));
+				aimClientList.add(aimClient);
+			}
+			pageModel = new PageModel();
+			pageModel.setPageNo(pageNo);
+			pageModel.setPageSize(pageSize);
+			pageModel.setList(aimClientList);
+			pageModel.setTotalRecords(getTotalAimRecords(conn, queryStr));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DbUtil.close(rs);
+			DbUtil.close(pstmt);
+			DbUtil.close(conn);
+		}
+		return pageModel;
+
+	}
+
+	/**
+	 * 根据条件取得需方客户的记录数
+	 * 
+	 * @param conn
+	 * @param queryStr
+	 *            条件
+	 * @return 记录数
+	 */
+	private int getTotalAimRecords(Connection conn, String queryStr) {
+		String sql = "select count(*) from v_aim_client " + "where client_temi_id like '" + queryStr
+				+ "%' or name like '" + queryStr + "%' ";
+		int totalRecords = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				totalRecords = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DbUtil.close(rs);
+			DbUtil.close(pstmt);
+		}
+		return totalRecords;
+	}
 }

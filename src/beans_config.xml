@@ -3,8 +3,10 @@
 <beans>
 	<service-class>
 		<service id="org.cn.pilot.drp.basedata.manager.ItemManager" class="org.cn.pilot.drp.basedata.manager.ItemManagerImpl" />
+		<service id="org.cn.pilot.drp.flowcard.manager.FlowCardManager" class="org.cn.pilot.drp.flowcard.manager.impl.FlowCardManagerImpl" />
 	</service-class>
 	<dao-class>
 		<dao id="org.cn.pilot.drp.basedata.dao.dao.ItemDAO" class="org.cn.pilot.drp.basedata.dao.impl.ItemDAO4OracleImpl" />
+		<dao id="org.cn.pilot.drp.flowcard.dao.FlowCardDAO" class="org.cn.pilot.drp.flowcard.dao.impl.FlowCardDAOImpl" />
 	</dao-class>
 </beans>

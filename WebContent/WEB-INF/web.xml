@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="WebApp_ID" version="3.0">
 	<!-- context begin ///////////////////////////////////////// -->
 	<context-param>
 		<param-name>page-size</param-name>
@@ -91,8 +92,8 @@
 		<servlet-name>ModifyItemServlet</servlet-name>
 		<url-pattern>/servlet/item/ModifyItemServlet</url-pattern>
 	</servlet-mapping>
-	
-		<servlet>
+
+	<servlet>
 		<servlet-name>DeleteItemServlet</servlet-name>
 		<servlet-class>org.cn.pilot.drp.basedata.web.DeleteItemServlet</servlet-class>
 	</servlet>
@@ -101,9 +102,36 @@
 		<url-pattern>/servlet/item/DeleteItemServlet</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>ValidateUserPasswordServlet</servlet-name>
+		<servlet-class>org.cn.pilot.drp.util.servlet.ValidateUserPasswordServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ValidateUserPasswordServlet</servlet-name>
+		<url-pattern>/servlet/sysmgr/ValidateUserPasswordServlet</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>FiscalYearPeriodValidateServlet</servlet-name>
+		<servlet-class>org.cn.pilot.drp.util.servlet.FiscalYearPeriodValidateServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>FiscalYearPeriodValidateServlet</servlet-name>
+		<url-pattern>/servlet/basedata/FiscalYearPeriodValidateServlet</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>FlowCardServlet</servlet-name>
+		<servlet-class>org.cn.pilot.drp.flowcard.web.FlowCardServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>FlowCardServlet</servlet-name>
+		<url-pattern>/servlet/flowcard/FlowCardServlet</url-pattern>
+	</servlet-mapping>
+
 	<!-- servlet end //////////////////////////////////////// -->
 	<!-- error begin //////////////////////////////////////// -->
-
+<!--   
 	<error-page>
 		<error-code>404</error-code>
 		<location>/http_error.jsp</location>
@@ -112,7 +140,7 @@
 		<error-code>500</error-code>
 		<location>/http_error.jsp</location>
 	</error-page>
-
+-->
 	<error-page>
 		<exception-type>org.cn.pilot.drp.util.ApplicationException</exception-type>
 		<location>/error.jsp</location>

@@ -45,16 +45,16 @@
 			document.getElementById("password").focus();
 			return;
 		}
-		document.getElementById("loginform").action = "login.jsp?command=login";
-		document.getElementById("loginform").method = "post";
-		document.getElementById("loginform").submit();
+		document.getElementById("loginForm").action="login.jsp?command=login";
+		document.getElementById("loginForm").method="post";
+		document.getElementById("loginForm").submit();
 	}
 </SCRIPT>
 
 <META content="MSHTML 6.00.2800.1264" name=GENERATOR>
 </HEAD>
 <BODY leftMargin=0 topMargin=0 onload=init()>
-	<FORM name=loginForm action="main.html" method=post>
+	<FORM name=loginForm id="loginForm">
 		<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
 			<TBODY>
 				<TR height=50>

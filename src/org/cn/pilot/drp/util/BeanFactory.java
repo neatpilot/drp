@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.cn.pilot.drp.basedata.dao.dao.ItemDAO;
+import org.cn.pilot.drp.util.database.TransactionHandler;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -54,6 +55,11 @@ public class BeanFactory {
 		Object serviceObject = null;
 		try {
 			serviceObject = Class.forName(className).newInstance();
+			
+			//动态代理包装业务逻辑层
+			TransactionHandler handler = new TransactionHandler();
+			serviceObject = handler.bind(serviceObject);
+			
 			serviceMap.put(key, serviceObject);
 		} catch (InstantiationException e) {
 			e.printStackTrace();
