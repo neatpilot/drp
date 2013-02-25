@@ -1,14 +1,12 @@
 package org.cn.pilot.drp.util.database;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.cn.pilot.drp.util.ApplicationException;
-import org.cn.pilot.drp.util.JdbcConfig;
-import org.cn.pilot.drp.util.XmlConfigReader;
+import org.cn.pilot.drp.util.DbUtil;
 
 /**
  * 采用ThreadLocal管理数据库连接Connection
@@ -25,22 +23,30 @@ public class ConnectionManager {
 	 * @return
 	 */
 	public static Connection getConnection() throws ApplicationException {
+//		Connection conn = connLocal.get();
+//		if (conn == null) {
+//			// ThreadLocal中没有connection，则新建放入
+//			try {
+//				JdbcConfig dbConfig = XmlConfigReader.getInstance().getJdbcConfig();
+//				Class.forName(dbConfig.getDriverName());
+//				conn = DriverManager.getConnection(dbConfig.getUrl(), dbConfig.getUser(), dbConfig.getPassword());
+//				connLocal.set(conn);
+//			} catch (ClassNotFoundException e) {
+//				e.printStackTrace();
+//				// connection 管理是在业务逻辑层
+//				throw new ApplicationException("『数据库』系统错误，请联系系统管理员");
+//			} catch (SQLException e) {
+//				e.printStackTrace();
+//				throw new ApplicationException("『数据库』系统错误，请联系系统管理员");
+//			}
+//		}
+//		return conn;
+		
 		Connection conn = connLocal.get();
 		if (conn == null) {
-			// ThreadLocal中没有connection，则新建放入
-			try {
-				JdbcConfig dbConfig = XmlConfigReader.getInstance().getJdbcConfig();
-				Class.forName(dbConfig.getDriverName());
-				conn = DriverManager.getConnection(dbConfig.getUrl(), dbConfig.getUser(), dbConfig.getPassword());
-				connLocal.set(conn);
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-				// connection 管理是在业务逻辑层
-				throw new ApplicationException("『数据库』系统错误，请联系系统管理员");
-			} catch (SQLException e) {
-				e.printStackTrace();
-				throw new ApplicationException("『数据库』系统错误，请联系系统管理员");
-			}
+			// TODO DButil有遗留的引用，故把从数据库连接池获得connection的操作放在DBUtil
+			conn = DbUtil.getConnection();
+			connLocal.set(conn);
 		}
 		return conn;
 	}

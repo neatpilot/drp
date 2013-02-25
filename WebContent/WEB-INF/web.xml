@@ -8,7 +8,31 @@
 		<param-value>3</param-value>
 	</context-param>
 	<!-- context end ///////////////////////////////////////// -->
+	<!-- resource start ///////////////////////////////////////// -->
+	<resource-ref>
+		<description>Oracle Datasource drp</description>
+		<res-ref-name>jdbc/drp</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
+	<!-- resource end ///////////////////////////////////////// -->
+	
 	<!-- filter begin ///////////////////////////////////////// -->
+	<filter>
+		<filter-name>RoleAuthFilter</filter-name>
+		<filter-class>org.cn.pilot.drp.util.filter.RoleAuthFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>RoleAuthFilter</filter-name>
+		<url-pattern>*.jsp</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>RoleAuthFilter</filter-name>
+		<url-pattern>/servlet/*</url-pattern>
+	</filter-mapping>
+
 	<filter>
 		<filter-name>CharsetEncodingFilter</filter-name>
 		<filter-class>org.cn.pilot.drp.util.filter.CharsetEncodingFilter</filter-class>
@@ -129,18 +153,18 @@
 		<url-pattern>/servlet/flowcard/FlowCardServlet</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>AuthImageServlet</servlet-name>
+		<servlet-class>org.cn.pilot.drp.util.servlet.AuthImageServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AuthImageServlet</servlet-name>
+		<url-pattern>/servlet/AuthImageServlet</url-pattern>
+	</servlet-mapping>
 	<!-- servlet end //////////////////////////////////////// -->
 	<!-- error begin //////////////////////////////////////// -->
-<!--   
-	<error-page>
-		<error-code>404</error-code>
-		<location>/http_error.jsp</location>
-	</error-page>
-	<error-page>
-		<error-code>500</error-code>
-		<location>/http_error.jsp</location>
-	</error-page>
--->
+	<!-- <error-page> <error-code>404</error-code> <location>/http_error.jsp</location> </error-page> <error-page> <error-code>500</error-code> 
+		<location>/http_error.jsp</location> </error-page> -->
 	<error-page>
 		<exception-type>org.cn.pilot.drp.util.ApplicationException</exception-type>
 		<location>/error.jsp</location>

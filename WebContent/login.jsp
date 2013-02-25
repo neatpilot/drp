@@ -7,18 +7,21 @@
 	if ("login".equals(request.getParameter("command"))) {
 		String userId = request.getParameter("userId");
 		String password = request.getParameter("password");
-		try {
-			User user = UserManager.getInstance().login(userId,
-					password);
+		String captcha = request.getParameter("captcha");
+		if (!captcha.trim().equalsIgnoreCase((String) session.getAttribute("rand"))) {
+			out.println("验证码不正确");
+		} else {
+			try {
+				User user = UserManager.getInstance().login(userId, password);
 
-			session.setAttribute("user_info", user);
+				session.setAttribute("user_info", user);
 
-			response.sendRedirect(request.getContextPath()
-					+ "/main.jsp");
-		} catch (UserNotFoundException e) {
-			out.println(e.getMessage());
-		} catch (PasswordNotCorrectException e) {
-			out.println(e.getMessage());
+				response.sendRedirect(request.getContextPath() + "/main.jsp");
+			} catch (UserNotFoundException e) {
+				out.println(e.getMessage());
+			} catch (PasswordNotCorrectException e) {
+				out.println(e.getMessage());
+			}
 		}
 	}
 %>
@@ -28,6 +31,11 @@
 <TITLE></TITLE>
 <script src="./script/client_validate.js"></script>
 <script type="text/javascript">
+	// 多个frame，保证login.jsp在top
+	if (window.self != window.top) {
+		window.top.location = window.self.location;
+	}
+	
 	function init() {
 		//loginForm.userId.focus();
 		document.getElementById("userId").focus();
@@ -45,8 +53,8 @@
 			document.getElementById("password").focus();
 			return;
 		}
-		document.getElementById("loginForm").action="login.jsp?command=login";
-		document.getElementById("loginForm").method="post";
+		document.getElementById("loginForm").action = "login.jsp?command=login";
+		document.getElementById("loginForm").method = "post";
 		document.getElementById("loginForm").submit();
 	}
 </SCRIPT>
@@ -127,7 +135,7 @@
 												</TR>
 												<TR>
 													<TD align=left><FONT face="verdana, arial, helvetica, sans-serif" size=-1>验证码：</FONT></TD>
-													<TD align=left><INPUT name=userId2 type=text size="6" maxlength="6"> &nbsp; <img src="images/authImage.jpg"></TD>
+													<TD align=left><INPUT name="captcha" type=text size="6" maxlength="6"> &nbsp; <img src="${pageContext.request.contextPath}/servlet/AuthImageServlet"></TD>
 												</TR>
 												<TR>
 													<TD><BR></TD>

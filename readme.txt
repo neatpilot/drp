@@ -26,3 +26,9 @@ V5
 2. ThreadLocal stores Connection
 3. Dynamic Proxy for service layer
 4. JSTL for web pages
+
+V6
+
+1. add Captcha
+2. add RoleAuthFilter to control permission
+3. enhance database with tomcat dbcp (connection pool)
