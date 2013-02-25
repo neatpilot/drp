@@ -1,16 +1,16 @@
 Learning Java Web
 
-JAVAWEB + JSTL + Oracle
+JAVAWEB + Servlet + JSTL + Oracle
 
 V1~V4
 
-1. Project initilize
+1. Project initialize
 	JDBC
 	Database config XMl file (dom4j)
 
-2. User maintanience (JavaBean + JSP + AJAX)
+2. User maintenance (JavaBean + JSP + AJAX)
 3. PageModel for paging
-4. BaseData maintainience (Servlet + JSP + AJAX)
+4. BaseData maintenance (Servlet + JSP + AJAX)
 5. BeanFactory for abstract factory pattern (service & DAO layer implementation)
 
 
