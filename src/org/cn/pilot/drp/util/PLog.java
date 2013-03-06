@@ -1,18 +1,7 @@
 package org.cn.pilot.drp.util;
 
 public class PLog {
-	private String location;
-	private String message;
-	
-	public PLog(String location,String message){
-		location = location;
-		message = message;
+	public static String atLocation(Object object) {
+		return "       [@" + object.getClass().getName() + " ]";
 	}
-
-	@Override
-	public String toString() {
-		return "PLog ["+location + ", {" + message + "}]";
-	}
-	
-	
 }

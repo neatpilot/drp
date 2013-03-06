@@ -5,14 +5,12 @@
 <%@ page language="java" contentType="text/html; charset=GB18030" pageEncoding="GB18030"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 	if ("add".equals(request.getParameter("command"))) {
 		FiscalYearPeriod fiscalYearPeriod = new FiscalYearPeriod();
 		fiscalYearPeriod.setFiscalYear(Integer.parseInt(request.getParameter("fiscalYear")));
 		fiscalYearPeriod.setFiscalPeriod(Integer.parseInt(request.getParameter("fiscalPeriod")));
-		fiscalYearPeriod.setBeginDate(new SimpleDateFormat("yyyy-MM-dd").parse(request
-				.getParameter("beginDate")));
+		fiscalYearPeriod.setBeginDate(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("beginDate")));
 		fiscalYearPeriod.setEndDate(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("endDate")));
 		//接收得到这个check box，说明选中
 		fiscalYearPeriod.setPeriodSts(request.getParameter("periodSts") == null ? "N" : "Y");

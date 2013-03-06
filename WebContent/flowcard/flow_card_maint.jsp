@@ -9,7 +9,6 @@
 <script src="${pageContext.request.contextPath}/script/JSCalendar.js"></script>
 <script src="${pageContext.request.contextPath}/script/client_validate.js"></script>
 <script type="text/javascript">
-	
 	function addFlowCard() {
 		window.self.location = "${pageContext.request.contextPath}/servlet/flowcard/FlowCardServlet?command=${showAdd}";
 	}

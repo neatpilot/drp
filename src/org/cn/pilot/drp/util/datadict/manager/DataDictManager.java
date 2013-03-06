@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.cn.pilot.drp.util.DbUtil;
+import org.cn.pilot.drp.util.configuration.ConnectionManager;
 import org.cn.pilot.drp.util.datadict.domain.ClientLevel;
 import org.cn.pilot.drp.util.datadict.domain.ItemCategory;
 import org.cn.pilot.drp.util.datadict.domain.ItemUnit;
@@ -38,7 +38,7 @@ public class DataDictManager {
 		ResultSet rs = null;
 
 		try {
-			conn = DbUtil.getConnection();
+			conn = ConnectionManager.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			list = new ArrayList<ClientLevel>();
@@ -51,9 +51,9 @@ public class DataDictManager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DbUtil.close(rs);
-			DbUtil.close(pstmt);
-			DbUtil.close(conn);
+			ConnectionManager.close(rs);
+			ConnectionManager.close(pstmt);
+			ConnectionManager.close(conn);
 		}
 
 		return list;
@@ -73,7 +73,7 @@ public class DataDictManager {
 		ResultSet rs = null;
 
 		try {
-			conn = DbUtil.getConnection();
+			conn = ConnectionManager.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			list = new ArrayList<ItemCategory>();
@@ -86,9 +86,9 @@ public class DataDictManager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DbUtil.close(rs);
-			DbUtil.close(pstmt);
-			DbUtil.close(conn);
+			ConnectionManager.close(rs);
+			ConnectionManager.close(pstmt);
+			ConnectionManager.close(conn);
 		}
 
 		return list;
@@ -108,7 +108,7 @@ public class DataDictManager {
 		ResultSet rs = null;
 
 		try {
-			conn = DbUtil.getConnection();
+			conn = ConnectionManager.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			list = new ArrayList<ItemUnit>();
@@ -121,9 +121,9 @@ public class DataDictManager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DbUtil.close(rs);
-			DbUtil.close(pstmt);
-			DbUtil.close(conn);
+			ConnectionManager.close(rs);
+			ConnectionManager.close(pstmt);
+			ConnectionManager.close(conn);
 		}
 
 		return list;

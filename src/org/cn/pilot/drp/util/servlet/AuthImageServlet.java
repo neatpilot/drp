@@ -14,9 +14,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.cn.pilot.drp.util.PLog;
+
 public class AuthImageServlet extends HttpServlet {
 
-	//private static final String CONTENT_TYPE = "text/html; charset=gb2312";
+	// private static final String CONTENT_TYPE = "text/html; charset=gb2312";
 	// 设置字母的大小,大小
 	private Font mFont = new Font("Times New Roman", Font.PLAIN, 17);
 
@@ -71,6 +73,7 @@ public class AuthImageServlet extends HttpServlet {
 
 		HttpSession session = req.getSession(true);
 		session.setAttribute("rand", sRand);
+		System.out.println("验证码-->" + sRand + PLog.atLocation(this));
 		g.dispose();
 		ImageIO.write(image, "JPEG", resp.getOutputStream());
 	}

@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.cn.pilot.drp.basedata.domain.FiscalYearPeriod;
-import org.cn.pilot.drp.util.DbUtil;
 import org.cn.pilot.drp.util.IdGenerator;
 import org.cn.pilot.drp.util.PageModel;
+import org.cn.pilot.drp.util.configuration.ConnectionManager;
 
 public class FiscalYearPeriodManager {
 	private static FiscalYearPeriodManager instance = new FiscalYearPeriodManager();
@@ -35,7 +35,7 @@ public class FiscalYearPeriodManager {
 		PreparedStatement pstmt = null;
 
 		try {
-			conn = DbUtil.getConnection();
+			conn = ConnectionManager.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, (int) IdGenerator.generate("t_fiscal_year_period"));
 			pstmt.setInt(2, fiscalYearPeriod.getFiscalYear());
@@ -47,8 +47,8 @@ public class FiscalYearPeriodManager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DbUtil.close(pstmt);
-			DbUtil.close(conn);
+			ConnectionManager.close(pstmt);
+			ConnectionManager.close(conn);
 		}
 
 	}
@@ -64,7 +64,7 @@ public class FiscalYearPeriodManager {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
-			conn = DbUtil.getConnection();
+			conn = ConnectionManager.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setDate(1, new java.sql.Date(fiscalYearPeriod.getBeginDate().getTime()));
 			pstmt.setDate(2, new java.sql.Date(fiscalYearPeriod.getEndDate().getTime()));
@@ -74,8 +74,8 @@ public class FiscalYearPeriodManager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DbUtil.close(pstmt);
-			DbUtil.close(conn);
+			ConnectionManager.close(pstmt);
+			ConnectionManager.close(conn);
 		}
 	}
 
@@ -96,7 +96,7 @@ public class FiscalYearPeriodManager {
 		ResultSet rs = null;
 		FiscalYearPeriod fiscalYearPeriod = null;
 		try {
-			conn = DbUtil.getConnection();
+			conn = ConnectionManager.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, fiscalYear);
 			pstmt.setInt(2, fiscalPeriod);
@@ -113,9 +113,9 @@ public class FiscalYearPeriodManager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DbUtil.close(rs);
-			DbUtil.close(pstmt);
-			DbUtil.close(conn);
+			ConnectionManager.close(rs);
+			ConnectionManager.close(pstmt);
+			ConnectionManager.close(conn);
 		}
 		return fiscalYearPeriod;
 	}
@@ -134,7 +134,7 @@ public class FiscalYearPeriodManager {
 		ResultSet rs = null;
 		FiscalYearPeriod fiscalYearPeriod = null;
 		try {
-			conn = DbUtil.getConnection();
+			conn = ConnectionManager.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, id);
 			rs = pstmt.executeQuery();
@@ -150,9 +150,9 @@ public class FiscalYearPeriodManager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DbUtil.close(rs);
-			DbUtil.close(pstmt);
-			DbUtil.close(conn);
+			ConnectionManager.close(rs);
+			ConnectionManager.close(pstmt);
+			ConnectionManager.close(conn);
 		}
 		return fiscalYearPeriod;
 	}
@@ -184,7 +184,7 @@ public class FiscalYearPeriodManager {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
-			conn = DbUtil.getConnection();
+			conn = ConnectionManager.getConnection();
 			pstmt = conn.prepareStatement(sbSql.toString());
 			pstmt.setInt(1, pageNo * pageSize);
 			pstmt.setInt(2, (pageNo - 1) * pageSize);
@@ -211,9 +211,9 @@ public class FiscalYearPeriodManager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DbUtil.close(rs);
-			DbUtil.close(pstmt);
-			DbUtil.close(conn);
+			ConnectionManager.close(rs);
+			ConnectionManager.close(pstmt);
+			ConnectionManager.close(conn);
 		}
 
 		return pageModel;
@@ -240,8 +240,8 @@ public class FiscalYearPeriodManager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DbUtil.close(rs);
-			DbUtil.close(pstmt);
+			ConnectionManager.close(rs);
+			ConnectionManager.close(pstmt);
 		}
 		return totalRecords;
 	}

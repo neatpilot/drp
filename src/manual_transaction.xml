@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- true 代表需要 手动事务处理 -->
+<config>
+	<!-- sysmgr -->
+	<service id="org.cn.pilot.drp.sysmgr.manager.impl.SysmgrManagerImpl">
+		<method name="addUser" value="true" />
+		<method name="deleteUser" value="false" />
+		<method name="modifyUser" value="false" />
+		<method name="findUserList" value="true" />
+		<method name="login" value="false" />
+		<method name="findUserById" value="false" />
+	</service>
+	<!-- flowcard -->
+	<service id="org.cn.pilot.drp.flowcard.manager.impl.FlowCardManagerImpl">
+	</service>
+</config>

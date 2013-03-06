@@ -10,9 +10,9 @@ import java.util.List;
 import org.cn.pilot.drp.basedata.domain.AimClient;
 import org.cn.pilot.drp.basedata.domain.Client;
 import org.cn.pilot.drp.util.Constants;
-import org.cn.pilot.drp.util.DbUtil;
 import org.cn.pilot.drp.util.IdGenerator;
 import org.cn.pilot.drp.util.PageModel;
+import org.cn.pilot.drp.util.configuration.ConnectionManager;
 import org.cn.pilot.drp.util.datadict.domain.ClientLevel;
 
 /**
@@ -44,10 +44,10 @@ public class ClientManager {
 		PreparedStatement pstmt = null;
 
 		try {
-			conn = DbUtil.getConnection();
+			conn = ConnectionManager.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			// manually control a transaction
-			DbUtil.beginTransaction(conn);
+			ConnectionManager.beginTransaction(conn);
 
 			pstmt.setInt(1, IdGenerator.generate("t_client"));
 			pstmt.setInt(2, clientOrRegion.getPid());
@@ -68,14 +68,14 @@ public class ClientManager {
 				modifyIsLeafField(conn, parentClientOrRegion.getId(), Constants.NO);
 			}
 
-			DbUtil.commitTransaction(conn);
+			ConnectionManager.commitTransaction(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			DbUtil.rollbackTransaction(conn);
+			ConnectionManager.rollbackTransaction(conn);
 		} finally {
-			DbUtil.close(pstmt);
-			DbUtil.resetConnection(conn);
-			DbUtil.close(conn);
+			ConnectionManager.close(pstmt);
+			ConnectionManager.resetConnection(conn);
+			ConnectionManager.close(conn);
 		}
 	}
 
@@ -99,7 +99,7 @@ public class ClientManager {
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			DbUtil.close(pstmt);
+			ConnectionManager.close(pstmt);
 		}
 	}
 
@@ -115,7 +115,7 @@ public class ClientManager {
 		PreparedStatement pstmt = null;
 
 		try {
-			conn = DbUtil.getConnection();
+			conn = ConnectionManager.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, clientOrRegion.getClientLevel().getId());
 			pstmt.setString(2, clientOrRegion.getName());
@@ -128,8 +128,8 @@ public class ClientManager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DbUtil.close(pstmt);
-			DbUtil.close(conn);
+			ConnectionManager.close(pstmt);
+			ConnectionManager.close(conn);
 		}
 	}
 
@@ -151,8 +151,8 @@ public class ClientManager {
 		Connection conn = null;
 
 		try {
-			conn = DbUtil.getConnection();
-			DbUtil.beginTransaction(conn);
+			conn = ConnectionManager.getConnection();
+			ConnectionManager.beginTransaction(conn);
 			// store node(recursionDelNode will delete this node)
 			Client client = findClientOrRegionById(id);
 			// recursively delete nodes
@@ -163,13 +163,13 @@ public class ClientManager {
 				modifyIsLeafField(conn, client.getPid(), Constants.YES_FLAG);
 			}
 
-			DbUtil.commitTransaction(conn);
+			ConnectionManager.commitTransaction(conn);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			DbUtil.rollbackTransaction(conn);
+			ConnectionManager.rollbackTransaction(conn);
 		} finally {
-			DbUtil.resetConnection(conn);
-			DbUtil.close(conn);
+			ConnectionManager.resetConnection(conn);
+			ConnectionManager.close(conn);
 		}
 
 	}
@@ -200,8 +200,8 @@ public class ClientManager {
 			}
 			delNode(conn, id);
 		} finally {
-			DbUtil.close(rs);
-			DbUtil.close(pstmt);
+			ConnectionManager.close(rs);
+			ConnectionManager.close(pstmt);
 		}
 	}
 
@@ -221,7 +221,7 @@ public class ClientManager {
 			pstmt.setInt(1, id);
 			pstmt.executeUpdate();
 		} finally {
-			DbUtil.close(pstmt);
+			ConnectionManager.close(pstmt);
 		}
 	}
 
@@ -245,8 +245,8 @@ public class ClientManager {
 			rs.next();
 			count = rs.getInt("c");
 		} finally {
-			DbUtil.close(rs);
-			DbUtil.close(pstmt);
+			ConnectionManager.close(rs);
+			ConnectionManager.close(pstmt);
 		}
 		return count;
 	}
@@ -271,7 +271,7 @@ public class ClientManager {
 		ResultSet rs = null;
 
 		try {
-			conn = DbUtil.getConnection();
+			conn = ConnectionManager.getConnection();
 			pstmt = conn.prepareStatement(sbSql.toString());
 			pstmt.setInt(1, id);
 			rs = pstmt.executeQuery();
@@ -298,9 +298,9 @@ public class ClientManager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DbUtil.close(rs);
-			DbUtil.close(pstmt);
-			DbUtil.close(conn);
+			ConnectionManager.close(rs);
+			ConnectionManager.close(pstmt);
+			ConnectionManager.close(conn);
 		}
 
 		return client;
@@ -319,7 +319,7 @@ public class ClientManager {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
-			conn = DbUtil.getConnection();
+			conn = ConnectionManager.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, clientId);
 			rs = pstmt.executeQuery();
@@ -330,9 +330,9 @@ public class ClientManager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DbUtil.close(rs);
-			DbUtil.close(pstmt);
-			DbUtil.close(conn);
+			ConnectionManager.close(rs);
+			ConnectionManager.close(pstmt);
+			ConnectionManager.close(conn);
 		}
 
 		return result;
@@ -377,7 +377,7 @@ public class ClientManager {
 		ResultSet rs = null;
 		PageModel pageModel = null;
 		try {
-			conn = DbUtil.getConnection();
+			conn = ConnectionManager.getConnection();
 			pstmt = conn.prepareStatement(sbSql.toString());
 			pstmt.setString(1, queryStr + "%");
 			pstmt.setString(2, queryStr + "%");
@@ -412,9 +412,9 @@ public class ClientManager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DbUtil.close(rs);
-			DbUtil.close(pstmt);
-			DbUtil.close(conn);
+			ConnectionManager.close(rs);
+			ConnectionManager.close(pstmt);
+			ConnectionManager.close(conn);
 		}
 		return pageModel;
 	}
@@ -442,8 +442,8 @@ public class ClientManager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DbUtil.close(rs);
-			DbUtil.close(pstmt);
+			ConnectionManager.close(rs);
+			ConnectionManager.close(pstmt);
 		}
 		return totalRecords;
 	}
@@ -479,7 +479,7 @@ public class ClientManager {
 		ResultSet rs = null;
 		PageModel pageModel = null;
 		try {
-			conn = DbUtil.getConnection();
+			conn = ConnectionManager.getConnection();
 			pstmt = conn.prepareStatement(sbSql.toString());
 			pstmt.setInt(1, pageNo * pageSize);
 			pstmt.setInt(2, (pageNo - 1) * pageSize);
@@ -502,9 +502,9 @@ public class ClientManager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DbUtil.close(rs);
-			DbUtil.close(pstmt);
-			DbUtil.close(conn);
+			ConnectionManager.close(rs);
+			ConnectionManager.close(pstmt);
+			ConnectionManager.close(conn);
 		}
 		return pageModel;
 
@@ -533,8 +533,8 @@ public class ClientManager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DbUtil.close(rs);
-			DbUtil.close(pstmt);
+			ConnectionManager.close(rs);
+			ConnectionManager.close(pstmt);
 		}
 		return totalRecords;
 	}

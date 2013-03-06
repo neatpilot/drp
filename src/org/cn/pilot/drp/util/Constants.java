@@ -18,6 +18,8 @@ public class Constants {
 
 	public static final String MODIFY = "modify";
 
+	public static final String SHOW_MODIFY = "show_modify";
+	
 	public static final String SHOW_ADD = "show_add";
 
 	public static final String AUDIT = "audit";

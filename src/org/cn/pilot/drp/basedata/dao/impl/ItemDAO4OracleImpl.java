@@ -9,11 +9,11 @@ import java.util.List;
 
 import org.cn.pilot.drp.basedata.dao.dao.ItemDAO;
 import org.cn.pilot.drp.basedata.domain.Item;
-import org.cn.pilot.drp.util.ApplicationException;
-import org.cn.pilot.drp.util.DbUtil;
 import org.cn.pilot.drp.util.PageModel;
+import org.cn.pilot.drp.util.configuration.ConnectionManager;
 import org.cn.pilot.drp.util.datadict.domain.ItemCategory;
 import org.cn.pilot.drp.util.datadict.domain.ItemUnit;
+import org.cn.pilot.drp.util.exception.ApplicationException;
 
 /**
  * Oracle DAO Implementation
@@ -41,7 +41,7 @@ public class ItemDAO4OracleImpl implements ItemDAO {
 			e.printStackTrace();
 			throw new ApplicationException("添加物料失败");
 		} finally {
-			DbUtil.close(pstmt);
+			ConnectionManager.close(pstmt);
 		}
 	}
 
@@ -66,7 +66,7 @@ public class ItemDAO4OracleImpl implements ItemDAO {
 			e.printStackTrace();
 			throw new ApplicationException("删除物料失败");
 		} finally {
-			DbUtil.close(pstmt);
+			ConnectionManager.close(pstmt);
 		}
 
 	}
@@ -91,7 +91,7 @@ public class ItemDAO4OracleImpl implements ItemDAO {
 			e.printStackTrace();
 			throw new ApplicationException("修改物料失败");
 		} finally {
-			DbUtil.close(pstmt);
+			ConnectionManager.close(pstmt);
 		}
 
 	}
@@ -135,8 +135,8 @@ public class ItemDAO4OracleImpl implements ItemDAO {
 			e.printStackTrace();
 			throw new ApplicationException("物料查询出错，物料代码[" + itemNo + "]");
 		} finally {
-			DbUtil.close(rs);
-			DbUtil.close(pstmt);
+			ConnectionManager.close(rs);
+			ConnectionManager.close(pstmt);
 		}
 		return item;
 	}
@@ -201,8 +201,8 @@ public class ItemDAO4OracleImpl implements ItemDAO {
 			e.printStackTrace();
 			throw new ApplicationException("分页查询失败");
 		} finally {
-			DbUtil.close(pstmt);
-			DbUtil.close(rs);
+			ConnectionManager.close(pstmt);
+			ConnectionManager.close(rs);
 		}
 
 		return itemPageModel;
@@ -232,8 +232,8 @@ public class ItemDAO4OracleImpl implements ItemDAO {
 				count = rs.getInt(1);
 			}
 		} finally {
-			DbUtil.close(pstmt);
-			DbUtil.close(rs);
+			ConnectionManager.close(pstmt);
+			ConnectionManager.close(rs);
 		}
 
 		return count;

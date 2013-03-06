@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.cn.pilot.drp.util.configuration.ConnectionManager;
+
 public class IdGenerator {
 	/**
 	 * 得到id值，并更新;get id value and then increase it into databse
@@ -22,8 +24,8 @@ public class IdGenerator {
 		
 		try {
 			//1. get current value 得到当前ID
-			conn = DbUtil.getConnection();
-			DbUtil.beginTransaction(conn);
+			conn = ConnectionManager.getConnection();
+			ConnectionManager.beginTransaction(conn);
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, tableName);
 			rs = pstmt.executeQuery();
@@ -37,16 +39,16 @@ public class IdGenerator {
 			//2. modify value++ to database 修改
 			value ++;
 			modifyIdValue(value, tableName, conn);
-			DbUtil.commitTransaction(conn);	
+			ConnectionManager.commitTransaction(conn);	
 		} catch (SQLException e) {
 			e.printStackTrace();
-			DbUtil.rollbackTransaction(conn);
+			ConnectionManager.rollbackTransaction(conn);
 			throw new RuntimeException();
 		}finally{
-			DbUtil.close(rs);
-			DbUtil.close(pstmt);
-			DbUtil.resetConnection(conn);
-			DbUtil.close(conn);
+			ConnectionManager.close(rs);
+			ConnectionManager.close(pstmt);
+			ConnectionManager.resetConnection(conn);
+			ConnectionManager.close(conn);
 			
 		}
 		
@@ -70,7 +72,7 @@ public class IdGenerator {
 			pstmt.setString(2, tableName);
 			pstmt.executeUpdate();
 		} finally{
-			DbUtil.close(pstmt);
+			ConnectionManager.close(pstmt);
 		}
 		
 	}

@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.cn.pilot.drp.sysmgr.domain.User;
-import org.cn.pilot.drp.util.BeanFactory;
+import org.cn.pilot.drp.util.configuration.BeanFactory;
 
 /**
  * ¹«¹²servlet³éÏó

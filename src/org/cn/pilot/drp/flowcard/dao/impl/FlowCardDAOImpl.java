@@ -16,7 +16,7 @@ import org.cn.pilot.drp.flowcard.dao.FlowCardDAO;
 import org.cn.pilot.drp.flowcard.domain.FlowCard;
 import org.cn.pilot.drp.flowcard.domain.FlowCardDetail;
 import org.cn.pilot.drp.sysmgr.domain.User;
-import org.cn.pilot.drp.util.database.ConnectionManager;
+import org.cn.pilot.drp.util.configuration.ConnectionManager;
 import org.cn.pilot.drp.util.exception.DAOException;
 
 public class FlowCardDAOImpl implements FlowCardDAO {

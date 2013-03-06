@@ -16,7 +16,7 @@
 		<res-auth>Container</res-auth>
 	</resource-ref>
 	<!-- resource end ///////////////////////////////////////// -->
-	
+
 	<!-- filter begin ///////////////////////////////////////// -->
 	<filter>
 		<filter-name>RoleAuthFilter</filter-name>
@@ -127,15 +127,6 @@
 	</servlet-mapping>
 
 	<servlet>
-		<servlet-name>ValidateUserPasswordServlet</servlet-name>
-		<servlet-class>org.cn.pilot.drp.util.servlet.ValidateUserPasswordServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>ValidateUserPasswordServlet</servlet-name>
-		<url-pattern>/servlet/sysmgr/ValidateUserPasswordServlet</url-pattern>
-	</servlet-mapping>
-
-	<servlet>
 		<servlet-name>FiscalYearPeriodValidateServlet</servlet-name>
 		<servlet-class>org.cn.pilot.drp.util.servlet.FiscalYearPeriodValidateServlet</servlet-class>
 	</servlet>
@@ -162,6 +153,29 @@
 		<url-pattern>/servlet/AuthImageServlet</url-pattern>
 	</servlet-mapping>
 	<!-- servlet end //////////////////////////////////////// -->
+	<!-- servlet pilot start //////////////////////////////////////// -->
+	<servlet>
+		<servlet-name>SysmgrServlet</servlet-name>
+		<servlet-class>org.cn.pilot.drp.sysmgr.web.SysmgrServlet</servlet-class>
+		<init-param>
+			<param-name>page_size</param-name>
+			<param-value>4</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SysmgrServlet</servlet-name>
+		<url-pattern>/servlet/SysmgrServlet</url-pattern>
+	</servlet-mapping>
+	
+		<servlet>
+		<servlet-name>LoginServlet</servlet-name>
+		<servlet-class>org.cn.pilot.drp.sysmgr.web.LoginServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>LoginServlet</servlet-name>
+		<url-pattern>/servlet/LoginServlet</url-pattern>
+	</servlet-mapping>
+	<!-- servlet pilot end //////////////////////////////////////// -->
 	<!-- error begin //////////////////////////////////////// -->
 	<!-- <error-page> <error-code>404</error-code> <location>/http_error.jsp</location> </error-page> <error-page> <error-code>500</error-code> 
 		<location>/http_error.jsp</location> </error-page> -->

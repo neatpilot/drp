@@ -1,7 +1,7 @@
 <%@page import="org.cn.pilot.drp.basedata.domain.Item"%>
 <%@page import="org.cn.pilot.drp.util.PageModel"%>
 <%@page import="org.cn.pilot.drp.basedata.manager.ItemManager"%>
-<%@page import="org.cn.pilot.drp.util.BeanFactory"%>
+<%@page import="org.cn.pilot.drp.util.configuration.BeanFactory"%>
 <%@ page language="java" contentType="text/html; charset=GB18030" pageEncoding="GB18030"%>
 <%@ page import="java.util.*"%>
 <%@ page import="java.text.*"%>
@@ -21,7 +21,7 @@
 		pageNo = Integer.parseInt(strPageNo);
 	}
 	BeanFactory factory = (BeanFactory) this.getServletContext().getAttribute("beanFactory");
-	ItemManager itemManager = (ItemManager) factory.getServiceObject(ItemManager.class);
+	ItemManager itemManager = (ItemManager) factory.getServiceObjectWithDynamicProxy(ItemManager.class);
 	PageModel pageModel = itemManager.findItemList(pageNo, pageSize, queryStr);
 %>
 <html>

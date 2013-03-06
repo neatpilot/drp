@@ -35,7 +35,7 @@ public class FlowCardServlet extends BaseServlet {
 
 	@Override
 	public void init() throws ServletException {
-		flowCardManager = (FlowCardManager) getBeanFactory().getServiceObject(FlowCardManager.class);
+		flowCardManager = (FlowCardManager) getBeanFactory().getServiceObjectWithDynamicProxy(FlowCardManager.class);
 		// TransactionHandler transactionHandler = new TransactionHandler();
 		// //对目标生成代理对象
 		// flowCardManager = (FlowCardManager)transactionHandler.newProxyInstance(flowCardManager);

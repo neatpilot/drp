@@ -4,10 +4,10 @@ import java.sql.Connection;
 
 import org.cn.pilot.drp.basedata.dao.dao.ItemDAO;
 import org.cn.pilot.drp.basedata.domain.Item;
-import org.cn.pilot.drp.util.ApplicationException;
-import org.cn.pilot.drp.util.BeanFactory;
-import org.cn.pilot.drp.util.DbUtil;
 import org.cn.pilot.drp.util.PageModel;
+import org.cn.pilot.drp.util.configuration.BeanFactory;
+import org.cn.pilot.drp.util.configuration.ConnectionManager;
+import org.cn.pilot.drp.util.exception.ApplicationException;
 
 public class ItemManagerImpl implements ItemManager {
 
@@ -21,7 +21,7 @@ public class ItemManagerImpl implements ItemManager {
 	public void addItem(Item item) {
 		Connection conn = null;
 		try {
-			conn = DbUtil.getConnection();
+			conn = ConnectionManager.getConnection();
 			if (itemDAO.findItemById(conn, item.getItemNo()) != null) {
 				throw new ApplicationException("物料代码已经存在，代码=" + item.getItemNo() + "");
 			}
@@ -29,7 +29,7 @@ public class ItemManagerImpl implements ItemManager {
 		} catch (ApplicationException e) {
 			throw e;
 		} finally {
-			DbUtil.close(conn);
+			ConnectionManager.close(conn);
 		}
 
 	}
@@ -39,12 +39,12 @@ public class ItemManagerImpl implements ItemManager {
 		Connection conn = null;
 
 		try {
-			conn = DbUtil.getConnection();
+			conn = ConnectionManager.getConnection();
 			itemDAO.deleteItem(conn, itemNos);
 		} catch (ApplicationException e) {
 			throw e;
 		} finally {
-			DbUtil.close(conn);
+			ConnectionManager.close(conn);
 		}
 	}
 
@@ -53,12 +53,12 @@ public class ItemManagerImpl implements ItemManager {
 		Connection conn = null;
 
 		try {
-			conn = DbUtil.getConnection();
+			conn = ConnectionManager.getConnection();
 			itemDAO.modifyItem(conn, item);
 		} catch (ApplicationException e) {
 			throw e;
 		} finally {
-			DbUtil.close(conn);
+			ConnectionManager.close(conn);
 		}
 
 	}
@@ -69,12 +69,12 @@ public class ItemManagerImpl implements ItemManager {
 		Connection conn = null;
 
 		try {
-			conn = DbUtil.getConnection();
+			conn = ConnectionManager.getConnection();
 			item = itemDAO.findItemById(conn, itemNo);
 		} catch (ApplicationException e) {
 			throw e;
 		} finally {
-			DbUtil.close(conn);
+			ConnectionManager.close(conn);
 		}
 		return item;
 	}
@@ -85,12 +85,12 @@ public class ItemManagerImpl implements ItemManager {
 		Connection conn = null;
 
 		try {
-			conn = DbUtil.getConnection();
+			conn = ConnectionManager.getConnection();
 			itemPageModel = itemDAO.findItemList(conn, pageNo, pageSize, condition);
 		} catch (ApplicationException e) {
 			throw e;
 		} finally {
-			DbUtil.close(conn);
+			ConnectionManager.close(conn);
 		}
 		return itemPageModel;
 	}

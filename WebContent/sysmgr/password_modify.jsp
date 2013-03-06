@@ -1,30 +1,11 @@
-<%@page import="org.cn.pilot.drp.sysmgr.manager.UserManager"%>
-<%@page import="org.cn.pilot.drp.sysmgr.domain.User"%>
+<%@ include file="/commonpage.jsp"%>
 <%@ page language="java" contentType="text/html; charset=GB18030" pageEncoding="GB18030"%>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-			+ path + "/";
-
-	String newPassword = request.getParameter("newPassword");
-	if ("modify".equals(request.getParameter("command"))) {
-		newPassword = newPassword.trim();
-		User user = (User) session.getAttribute("user_info");
-		UserManager.getInstance().modifyUserPassword(user.getUserId(), newPassword);
-		// 修改session
-		user.setPassword(newPassword);
-		session.removeAttribute("user_info");
-		session.setAttribute("user_info", user);
-		out.print("modify password suscessfully");
-	}
-%>
 <html>
 <head>
-<base href="<%=basePath%>">
 <meta http-equiv="Content-Type" content="text/html; charset=GB18030">
 <title>修改密码</title>
-<link rel="stylesheet" href="style/drp.css">
-<script src="script/client_validate.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/style/drp.css">
+<script src="${pageContext.request.contextPath}/script/client_validate.js"></script>
 <script type="text/javascript">
 	function modifyPasword() {
 		if (document.getElementById("oldPassword").value.length < 6) {
@@ -53,7 +34,7 @@
 			return;
 		}
 		document.getElementById("userForm").method = "post";
-		document.getElementById("userForm").action = "<%=basePath%>sysmgr/password_modify.jsp?command=modify";
+		document.getElementById("userForm").action = "${pageContext.request.contextPath}/servlet/SysmgrServlet?command=modifyPassword";
 		document.getElementById("userForm").submit();
 	}
 
@@ -67,8 +48,8 @@
 				xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
 			}
 
-			var url = "<%=basePath%>servlet/sysmgr/ValidateUserPasswordServlet?oldPassword=" + oldPassword + "&time="
-					+ new Date().getTime();
+			var url = "${pageContext.request.contextPath}/servlet/SysmgrServlet?command=validatePassword&oldPassword="
+					+ oldPassword + "&time=" + new Date().getTime();
 			xmlHttp.open("GET", url, true);
 
 			xmlHttp.onreadystatechange = function() {
@@ -103,7 +84,8 @@
 					<td class="p1" height="16" nowrap>&nbsp;</td>
 				</tr>
 				<tr>
-					<td class="p1" height="35" nowrap>&nbsp&nbsp <img src="images/mark_arrow_02.gif" width="14" height="14"> <b><strong>系统管理&gt;&gt;</strong>修改密码</b>
+					<td class="p1" height="35" nowrap>&nbsp&nbsp <img
+						src="${pageContext.request.contextPath}/images/mark_arrow_02.gif" width="14" height="14"> <b><strong>系统管理&gt;&gt;</strong>修改密码</b>
 					</td>
 				</tr>
 			</table>
@@ -115,8 +97,8 @@
 							<font color="#FF0000">*</font>原密码:
 						</div>
 					</td>
-					<td><input name="oldPassword" type="password" class="text1" id="oldPassword" size="25" onblur="validateOldPassword()"><span
-						id="spanOldPasswordCheckMsg"></td>
+					<td><input name="oldPassword" type="password" class="text1" id="oldPassword" size="25"
+						onblur="validateOldPassword()"><span id="spanOldPasswordCheckMsg"></td>
 				</tr>
 				<tr>
 					<td height="27">
@@ -137,7 +119,8 @@
 			</table>
 			<hr width="100%" align="center" size=0>
 			<p>
-				<input name="btnModify" class="button1" type="button" id="btnModify" value="修改" onClick="modifyPasword()"> &nbsp; &nbsp;&nbsp;
+				<input name="btnModify" class="button1" type="button" id="btnModify" value="修改" onClick="modifyPasword()">
+				&nbsp; &nbsp;&nbsp;
 			</p>
 		</div>
 	</form>

@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.cn.pilot.drp.util.Constants;
-import org.cn.pilot.drp.util.DbUtil;
+import org.cn.pilot.drp.util.configuration.ConnectionManager;
 
 public class ClientTreeReader {
 
@@ -19,12 +19,12 @@ public class ClientTreeReader {
 	public String getClientTreeHTMLString() {
 		Connection conn = null;
 		try {
-			conn = DbUtil.getConnection();
+			conn = ConnectionManager.getConnection();
 			readClientTree(conn, 0, 0);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}finally {
-			DbUtil.close(conn);
+			ConnectionManager.close(conn);
 		}
 		return treeHTMLBuffer.toString();
 	}
@@ -86,8 +86,8 @@ public class ClientTreeReader {
 				treeHTMLBuffer.append("\n");
 			}
 		} finally {
-			DbUtil.close(pstmt);
-			DbUtil.close(rs);
+			ConnectionManager.close(pstmt);
+			ConnectionManager.close(rs);
 		}
 	}
 }
