@@ -1,10 +1,16 @@
-Learning Java Web
+This is a project by myself with online resources.
 
-JAVAWEB + Servlet + JSTL + Oracle
+GOAL: learn web development
+		Servlet, JSTL, Oracle, MVC, Dynamic Proxy, DHCP, AJAX, XML, etc.
+
+V9-----------------------------------------------------
+For further study, extract an item maintenance module and deploy it with SSH.
+(https://github.com/neatpilot/ItemSSH)
 
 V8-----------------------------------------------------
 1. change user model design to the uniform one (MVC + JSTL + dynamic proxy for BL layer + connection pool)
 2. fix TransactionHandler Exception bug (throw exception before transaction rollback)
+3. add manual_transaction.xml file to specify which method should be changed to be a manual transaction
 
 V7-----------------------------------------------------
 1. fix some typos
@@ -30,7 +36,7 @@ V1~V4--------------------------------------------------
 
 1. Project initialize
 	JDBC
-	Database config XMl file (dom4j)
+	Database config XML file (dom4j)
 
 2. User maintenance (JavaBean + JSP + AJAX)
 3. PageModel for paging
